@@ -153,7 +153,7 @@ module Nifty
       end
 
       def table_name
-        if scaffold_name.include?('::') && @namespace_model
+        if scaffold_name.include?('/') && @namespace_model
           plural_name.gsub('/', '_')
         end
       end
@@ -224,7 +224,7 @@ module Nifty
         elsif options[:action].to_s == "edit"
           "edit_#{item_resource}_#{suffix}(#{name})"
         else
-          if scaffold_name.include?('::') && !@namespace_model
+          if scaffold_name.include?('/') && !@namespace_model
             namespace = singular_name.split('/')[0..-2]
             "[:#{namespace.join(', :')}, #{name}]"
           else
