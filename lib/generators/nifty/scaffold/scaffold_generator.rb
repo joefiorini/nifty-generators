@@ -19,8 +19,7 @@ module Nifty
       class_option :namespace_model, :desc => 'If the resource is namespaced, include the model in the namespace.', :type => :boolean
       class_option :haml, :desc => 'Generate HAML views instead of ERB.', :type => :boolean
 
-      class_option :testunit, :desc => 'Use test/unit for test files.', :group => 'Test framework', :type => :boolean
-      class_option :shoulda, :desc => 'Use shoulda for test files.', :group => 'Test framework', :type => :boolean
+      class_option :test_framework
 
       def initialize(*args, &block)
         super
@@ -65,7 +64,7 @@ module Nifty
       end
 
       def add_gems
-        unless rspec?
+        unless test_framework == :rspec
           add_gem "mocha", :group => :test
         end
       end
@@ -285,16 +284,7 @@ module Nifty
       end
 
       def test_framework
-        return @test_framework if defined?(@test_framework)
-        if options.testunit?
-          return @test_framework = :testunit
-        elsif options.rspec?
-          return @test_framework = :rspec
-        elsif options.shoulda?
-          return @test_framework = :shoulda
-        else
-          return @test_framework = default_test_framework
-        end
+        options[:test_framework]
       end
 
       def default_test_framework
