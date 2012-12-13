@@ -20,7 +20,6 @@ module Nifty
       class_option :haml, :desc => 'Generate HAML views instead of ERB.', :type => :boolean
 
       class_option :testunit, :desc => 'Use test/unit for test files.', :group => 'Test framework', :type => :boolean
-      class_option :rspec, :desc => 'Use RSpec for test files.', :group => 'Test framework', :type => :boolean
       class_option :shoulda, :desc => 'Use shoulda for test files.', :group => 'Test framework', :type => :boolean
 
       def initialize(*args, &block)
@@ -66,7 +65,7 @@ module Nifty
       end
 
       def add_gems
-        unless options.rspec?
+        unless rspec?
           add_gem "mocha", :group => :test
         end
       end
@@ -76,12 +75,20 @@ module Nifty
           template 'model.rb', "app/models/#{model_path}.rb"
           if test_framework == :rspec
             template "tests/rspec/model.rb", "spec/models/#{model_path}_spec.rb"
-            template 'fixtures.yml', "spec/fixtures/#{model_path.pluralize}.yml"
+            if options[:fixture] && options[:fixture_replacement].nil?
+              template 'fixtures.yml', "spec/fixtures/#{model_path.pluralize}.yml"
+            end
           else
             template "tests/#{test_framework}/model.rb", "test/unit/#{model_path}_test.rb"
-            template 'fixtures.yml', "test/fixtures/#{model_path.pluralize}.yml"
+            if options[:fixture] && options[:fixture_replacement].nil?
+              template 'fixtures.yml', "test/fixtures/#{model_path.pluralize}.yml"
+            end
           end
         end
+      end
+
+      def rspec?
+        options[:test_framework].to_s == "rspec"
       end
 
       def create_migration
