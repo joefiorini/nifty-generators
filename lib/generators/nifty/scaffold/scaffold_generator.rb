@@ -66,7 +66,9 @@ module Nifty
       end
 
       def add_gems
-        add_gem "mocha", :group => :test
+        unless options.rspec?
+          add_gem "mocha", :group => :test
+        end
       end
 
       def create_model
@@ -154,7 +156,7 @@ module Nifty
         if @namespace_model
           scaffold_name.camelize
         else
-          scaffold_name.split('::').last.camelize
+          scaffold_name.split('/').last.camelize
         end
       end
 
