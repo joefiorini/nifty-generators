@@ -3,7 +3,11 @@
 <%- for attribute in model_attributes -%>
   <div class="field">
     <%%= f.label :<%= attribute.name %> %>
+     <% if attribute.reference? %>
+    <%%= f.collection_select <%= attribute.name.camelize %>.all, :id, :name %>
+    <% else %>
     <%%= f.<%= attribute.field_type %> :<%= attribute.name %> %>
+    <% end %>
   </div>
 <%- end -%>
   <div class="actions"><%%= f.submit %></div>
