@@ -4,7 +4,7 @@
   <div class="field">
     <%%= f.label :<%= attribute.name %> %>
      <% if attribute.reference? %>
-    <%%= f.collection_select <%= attribute.name.camelize %>.all, :id, :name %>
+    <%%= f.collection_select :<%= attribute.name %>, <%= attribute.name.camelize %>.all, :id, :name %>
     <% else %>
     <%%= f.<%= attribute.field_type %> :<%= attribute.name %> %>
     <% end %>
